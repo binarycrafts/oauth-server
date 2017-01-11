@@ -14,6 +14,7 @@ use Cake\ORM\TableRegistry;
 use League\OAuth2\Server\Exception\OAuthException;
 use OAuthServer\Model\Storage;
 use OAuthServer\Traits\GetStorageTrait;
+use Cake\Utility\Inflector;
 
 class OAuthAuthenticate extends BaseAuthenticate
 {
@@ -65,7 +66,7 @@ class OAuthAuthenticate extends BaseAuthenticate
 
         if ($this->config('server')) {
             $this->Server = $this->config('server');
-            
+
             return;
         }
 
@@ -132,7 +133,7 @@ class OAuthAuthenticate extends BaseAuthenticate
                     ]
                 )
             );
-            
+
             return $response;
         }
         $message = __d('authenticate', 'You are not authenticated.');
@@ -149,7 +150,7 @@ class OAuthAuthenticate extends BaseAuthenticate
             $this->Server->isValidRequest(true, $request->query('access_token'));
         } catch (OAuthException $e) {
             $this->_exception = $e;
-            
+
             return false;
         }
         $ownerModel = $this->Server
@@ -162,7 +163,7 @@ class OAuthAuthenticate extends BaseAuthenticate
             ->getOwnerId();
 
         try {
-            $owner = TableRegistry::get($ownerModel)
+            $owner = TableRegistry::get(Inflector::pluralize($ownerModel))
                 ->get($ownerId)
                 ->toArray();
         } catch (Exception $e) {
