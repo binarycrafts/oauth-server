@@ -61,7 +61,7 @@ class OAuthComponent extends Component
     {
         $serverConfig = $this->config('authorizationServer');
         $serverClassName = App::className($serverConfig['className']);
-        
+
         return new $serverClassName();
     }
 
@@ -91,7 +91,7 @@ class OAuthComponent extends Component
                 $objGrant->setVerifyCredentialsCallback(function ($username, $password) {
                     $controller = $this->_registry->getController();
                     $controller->Auth->constructAuthenticate();
-                    $userfield = $controller->Auth->config['authenticate']['Form']['fields']['username'];
+                    $userfield = $controller->Auth->config('authenticate')['Form']['fields']['username'];
                     $controller->request->data[$userfield] = $username;
                     $controller->request->data['password'] = $password;
                     $loginOk = $controller->Auth->identify();
@@ -128,7 +128,7 @@ class OAuthComponent extends Component
             $controller->response->statusCode($e->httpStatusCode);
             $controller->response->header($e->getHttpHeaders());
             $controller->set('response', $e);
-            
+
             return false;
         }
     }
